@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="run" name="Appkav2">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../eclipse/"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="9"/>
+    <property name="source" value="9"/>
+    <property name="dir.buildfile" value="."/>
+    <path id="Appkav2.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/jcalendar.jar"/>
+        <pathelement location="lib/jwizard.jar"/>
+        <pathelement location="lib/l2fprod-common-tasks.jar"/>
+        <pathelement location="lib/l2fprod-common-totd.jar"/>
+        <pathelement location="lib/jfreechart-1.0.12.jar"/>
+        <pathelement location="lib/jcommon-1.0.8-junit.jar"/>
+        <pathelement location="lib/jcommon-xml-1.0.8.jar"/>
+        <pathelement location="lib/jcommon-1.0.8.jar"/>
+        <pathelement location="lib/log4j-1.2.11.jar"/>
+    </path>
+    <path id="run.AboutDialog (1).classpath">
+        <path refid="Appkav2.classpath"/>
+        <pathelement location="lib/jcalendar.jar"/>
+        <pathelement location="lib/jwizard.jar"/>
+        <pathelement location="lib/l2fprod-common-tasks.jar"/>
+        <pathelement location="lib/l2fprod-common-totd.jar"/>
+        <pathelement location="lib/jfreechart-1.0.12.jar"/>
+        <pathelement location="lib/jcommon-1.0.8-junit.jar"/>
+        <pathelement location="lib/jcommon-xml-1.0.8.jar"/>
+        <pathelement location="lib/jcommon-1.0.8.jar"/>
+        <pathelement location="lib/log4j-1.2.11.jar"/>
+    </path>
+    <path id="run.Application.classpath">
+        <path refid="Appkav2.classpath"/>
+        <pathelement location="lib/jcalendar.jar"/>
+        <pathelement location="lib/jwizard.jar"/>
+        <pathelement location="lib/l2fprod-common-tasks.jar"/>
+        <pathelement location="lib/l2fprod-common-totd.jar"/>
+        <pathelement location="lib/jfreechart-1.0.12.jar"/>
+        <pathelement location="lib/jcommon-1.0.8-junit.jar"/>
+        <pathelement location="lib/jcommon-xml-1.0.8.jar"/>
+        <pathelement location="lib/jcommon-1.0.8.jar"/>
+        <pathelement location="lib/log4j-1.2.11.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+    	<mkdir dir="doc"/>
+    	<mkdir dir="dist"/>
+    	<mkdir dir="conf"/>
+    	<copyfile src="config.xml" dest="conf/config.xml"/>
+    	<mkdir dir="dist"/>
+    	<mkdir dir="logs"/>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    	<delete dir="doc"/>
+    	<delete dir="dist"/>
+       	<delete dir="conf"/>
+       	<delete dir="dist"/>
+       	<delete dir="logs"/>
+    </target>
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="Appkav2.classpath"/>
+        </javac>
+    	<copy todir="bin/app">
+    		<fileset dir="src/app">
+    			<exclude name="*.java"/>
+    		</fileset>
+    		
+    	</copy>
+    </target>
+    <target depends="build" name="run">
+        <java classname="app.Application" failonerror="true" fork="yes">
+            <classpath refid="run.Application.classpath"/>
+        </java>
+    </target>
+    <target name="doc">
+    	<javadoc sourcefiles = "src/app/*.java"
+    		destdir = "doc">
+    		<classpath refid="Appkav2.classpath"/>
+    		</javadoc>
+    </target>
+     <target depends = "init" name="jar">
+     	<jar filesetmanifest="mergewithoutmain" destfile="dist/appkav2.jar">
+        	<manifest>
+               <attribute name="Main-Class" value="app.Application"/>
+              	<attribute name="Class-Path" value="."/>
+             </manifest>
+           	 <fileset dir="${dir.buildfile}/bin"/>
+             <zipfileset src="${dir.buildfile}/lib/jcalendar.jar" excludes="META-INF/*.SF"/>
+             <zipfileset src="${dir.buildfile}/lib/jwizard.jar" excludes="META-INF/*.SF"/>
+             <zipfileset src="${dir.buildfile}/lib/l2fprod-common-tasks.jar" excludes="META-INF/*.SF"/>
+             <zipfileset src="${dir.buildfile}/lib/l2fprod-common-totd.jar" excludes="META-INF/*.SF"/>
+             <zipfileset src="${dir.buildfile}/lib/jfreechart-1.0.12.jar" excludes="META-INF/*.SF"/>
+             <zipfileset src="${dir.buildfile}/lib/jcommon-1.0.8-junit.jar" excludes="META-INF/*.SF"/>
+             <zipfileset src="${dir.buildfile}/lib/jcommon-xml-1.0.8.jar" excludes="META-INF/*.SF"/>
+             <zipfileset src="${dir.buildfile}/lib/jcommon-1.0.8.jar" excludes="META-INF/*.SF"/>
+              <zipfileset src="${dir.buildfile}/lib/log4j-1.2.11.jar" excludes="META-INF/*.SF"/>
+      	</jar>
+      </target>
+	<target depends="doc,jar,run" name="do_all"></target>
+</project>
